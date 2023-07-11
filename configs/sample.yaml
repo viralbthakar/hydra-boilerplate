@@ -50,6 +50,6 @@ experiment_config:
   stats_file_name: stats.json
 
 stats_aggregation:
-  input_root_dir: logs/exp1-initializers
+  input_root_dir: logs/test-exp
   input_file_name: stats.json
   output_file_name: aggregate_stats.json
