@@ -1,0 +1,55 @@
+defaults:
+  - override hydra/hydra_logging: colorlog
+  - override hydra/job_logging: colorlog
+  - _self_  # see https://hydra.cc/docs/upgrades/1.0_to_1.1/default_composition_order/ for details
+
+hydra:
+  job:
+    chdir: true
+    name: test-exp
+  sweep:
+    dir: logs/${hydra.job.name}
+    subdir: ${hydra.job.num}
+  run:
+    dir: logs/${hydra.job.name}/outputs/${now:%Y-%m-%d_%H-%M-%S}
+
+data_config:
+  dataset_id: mnist
+  flatten: false
+
+model_config:
+  model_id: baseline-cnn
+  input_shape:
+    - 28
+    - 28
+    - 1
+  output_shape: 10
+  output_activation: linear
+  kernel_initializer: 'he-uniform'
+  bias_initializer: 'zeros'
+
+training_config:
+  epochs: 30
+  batch_size: 64
+  training_observations_cnt: 40000
+  metrics:
+    metrics_id:
+      - precision
+      - recall
+      - accuracy
+  loss:
+    loss_id: scce  # choose `scce` for SparseCategoricalCrossentropy, `cce` for `CategoricalCrossentropy`, or `bce` for `BinaryCrossentropy `
+    loss_logits: true
+  optimizer:
+    optimizer_id: adam
+    learning_rate: 0.0001
+  
+experiment_config:
+  print_config: true  # print config at the start of the run
+  repetitions_cnt: 100  # number of experiments
+  stats_file_name: stats.json
+
+stats_aggregation:
+  input_root_dir: logs/exp1-initializers
+  input_file_name: stats.json
+  output_file_name: aggregate_stats.json

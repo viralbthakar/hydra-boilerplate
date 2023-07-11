@@ -1,0 +1,12 @@
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local
+outputs/
+multirun/
+logs/
+.Rhistory
+.DS_Store
